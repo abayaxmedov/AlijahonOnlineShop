@@ -1,8 +1,28 @@
-from django.db import models
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, UserManager
-from django.db.models import Model, CharField, ForeignKey, DecimalField, ImageField, DateTimeField, CASCADE, TextField, \
-    IntegerField, SET_NULL, BigIntegerField, TextChoices
+from django.db.models import Model, CharField, ImageField, TextField, DecimalField, ForeignKey, CASCADE, DateField, \
+    TextChoices, IntegerField, SET_NULL, DateTimeField, SmallIntegerField
+from django.db.models.fields import BigIntegerField, SlugField
+from django.utils.text import slugify
+from ckeditor_uploader.fields import RichTextUploadingField
+
+
+# Create your models here.
+class BaseSlugModel(Model):
+    slug = SlugField(max_length=255, unique=True, blank=True, null=True)
+    name = CharField(max_length=255)
+
+    class Meta:
+        abstract = True
+
+    def save(self, **kwargs):
+        slug = slugify(self.name)
+        i = 1
+        while Category.objects.filter(slug=slug).exists():
+            slug += f"%{i}"
+            i += 1 + i
+        self.slug = slug
+        super().save()
 
 
 class CustomUserManager(UserManager):
@@ -50,71 +70,112 @@ class User(AbstractUser):
     role = CharField(max_length=10, choices=RoleType, default=RoleType.USER)
 
 
+class Category(BaseSlugModel):
+    icon = ImageField(upload_to='icons/')
+
+    def __str__(self):
+        return self.name
+
+
+class Payment(Model):
+    class PaymentType(TextChoices):
+        REVIEW = 'review' 'Review'
+        COMPLETED = 'completed', 'Complete'
+        CANCEL = 'cancel', 'Cancel'
+
+    amount = DecimalField(decimal_places=2, max_digits=12)
+    photo = ImageField(upload_to='payments/')
+    payment_at = DateField(auto_now_add=True)
+    status = CharField(max_length=255, choices=PaymentType.choices, default=PaymentType.COMPLETED)
+
+    user = ForeignKey('apps.User', CASCADE, related_name='payments')
+
+
+class WishList(Model):
+    user = ForeignKey('apps.User', CASCADE, related_name='user_wishlists')
+    product = ForeignKey('apps.Product', CASCADE, related_name='product_wishlists')
+
+
 class Region(Model):
     name = CharField(max_length=255)
 
 
 class District(Model):
     name = CharField(max_length=255)
-    region = ForeignKey('apps.Region', on_delete=CASCADE)
-
-
-class Category(Model):
-    name = CharField(max_length=255)
-    icon = CharField(max_length=255)
-
-
-class Product(Model):
-    name = CharField(max_length=255)
-    description = TextField()
-    price = DecimalField(max_digits=10, decimal_places=2)
-    image = ImageField(upload_to='products/')
-    category = ForeignKey('apps.Category', on_delete=CASCADE)
-
-
-class Wishlist(Model):
-    user = ForeignKey(User, on_delete=CASCADE)
-    product = ForeignKey('apps.Product', on_delete=CASCADE)
+    region = ForeignKey('apps.Region', CASCADE, related_name='districts')
 
 
 class Thread(Model):
-    user = ForeignKey(User, on_delete=CASCADE)
-    product = ForeignKey('apps.Product', on_delete=CASCADE)
-    discount_sum = DecimalField(max_digits=10, decimal_places=2)
+    discount_sum = DecimalField(max_digits=12, decimal_places=2)
     name = CharField(max_length=255)
-    created_at = DateTimeField(auto_now_add=True)
-    visit_count = IntegerField(default=0)
+    created_at = DateField(auto_now_add=True)
+    visit_count = IntegerField(null=True, blank=True, default=0)
+
+    product = ForeignKey('apps.Product', CASCADE, related_name='product_threads')
+    user = ForeignKey('apps.User', CASCADE, related_name='user_threads')
+
+    @property
+    def product_price(self):
+        return self.product.price - self.discount_sum
+
+
+class Product(BaseSlugModel):
+    description = RichTextUploadingField()
+    image = ImageField(upload_to='products/')
+    quantity = IntegerField()
+    telegram_url = CharField(max_length=255, null=True, blank=True)
+
+    price = DecimalField(max_digits=12, decimal_places=2)
+    benefit = DecimalField(max_digits=12, decimal_places=2, default=0, null=True, blank=True)
+    site_sell = SmallIntegerField(default=0, null=True, blank=True)
+    discount = CharField(max_length=255, null=True, blank=True)
+    quantity = IntegerField(default=1)
+
+    category = ForeignKey('apps.Category', CASCADE, related_name='products')
+
+    def __str__(self):
+        return self.name
 
 
 class Order(Model):
-    class StatusType(TextChoices):
-        NEW = 'new', 'New'
-        PENDING = 'pending', 'Pending'
-        COMPLETED = 'completed', 'Completed'
-        CANCELED = 'canceled', 'Canceled'
-        READY_TO_ORDER = 'ready_to_order', 'Ready To Order'
-        DELIVERING = 'delivering', 'Delivering'
-        DELIVERED = 'delivered', 'Delivered'
-        NOT_PICK_UP = 'not_pick_up', 'Not Pick Up'
+    class OrderType(TextChoices):
+        NEW = 'new', 'New'  # yangi
+        PENDING = 'pending', 'Pending'  # kutilmoqda
+        READY_TO_ORDER = 'ready to order', 'Ready to order'  # buyurtma berishga tayyor
+        DELIVERING = 'delivering', 'Delivering'  # Yetkazib berish
+        DELIVERED = 'delivered', 'Delivered'  # Yetkazib berildi
+        NOT_PICK_UP = 'not pick up', 'Not pick up'  # olmaslik
+        ARCHIVED = 'archived', 'Archived'  # arxivlangan
+        CANCEL = 'cancel', 'Cancel'  # Bekor qilish
+        COMPLETED = 'completed', 'Completed'  # Bajarildi
+        # operatorga new, pending, ready to order, archived, cancel
+        # diliver delivering, delivered, not pick up, completed
 
-    owner = ForeignKey('apps.User', on_delete=SET_NULL, null=True, blank=True)
+    last_name = CharField(max_length=255, null=True, blank=True)
     phone_number = CharField(max_length=20)
-    ordered_at = DateTimeField(auto_now_add=True)
-    thread = ForeignKey('apps.Thread', on_delete=SET_NULL, null=True, blank=True)
-    product = ForeignKey('apps.Product', on_delete=CASCADE)
     quantity = IntegerField(default=1)
-    status = CharField(max_length=20, choices=StatusType, default=StatusType.NEW)
+    status = CharField(max_length=255, choices=OrderType.choices, default=OrderType.NEW)  # noqa
+    order_sum = DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    ordered_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
+    send_date = DateField(null=True, blank=True)
+    comment_operator = TextField(null=True, blank=True, default='')
+
+    thread = ForeignKey('apps.Thread', CASCADE, related_name='thread_orders', null=True, blank=True)
+    product = ForeignKey('apps.Product', CASCADE, related_name='product_orders')
+    owner = ForeignKey('apps.User', CASCADE, related_name='owner_orders', null=True, blank=True)
+    operator = ForeignKey('apps.User', SET_NULL, related_name='operator_orders', null=True, blank=True)
+    district = ForeignKey('apps.District', SET_NULL, related_name='district_orders', null=True, blank=True)
+
+    @property
+    def amount_sum(self):
+        return (self.quantity * self.product.
+                price)
 
 
-class Payment(Model):
-    class StatusType(TextChoices):
-        REVIEW = 'review', 'Review'
-        COMPLETED = 'completed', 'Completed'
-        CANCEL = 'cancel', 'Cancel'
-
-    user = ForeignKey('apps.User', on_delete=CASCADE)
-    amount = DecimalField(max_digits=10, decimal_places=2)
-    photo = ImageField(upload_to='payment/')
-    payment_at = DateTimeField(auto_now_add=True)
-    status = CharField(max_length=10, choices=StatusType, default=StatusType.REVIEW)
-    description = TextField(blank=True, null=True)
+class AdminSetting(Model):
+    # deliver_price = IntegerField()
+    competition_photo = ImageField(upload_to='admin/')
+    start = DateField()
+    finish = DateField()
+    description = RichTextUploadingField()

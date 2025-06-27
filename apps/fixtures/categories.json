@@ -1,0 +1,129 @@
+[
+  {
+    "model": "apps.Category",
+    "pk": 1,
+    "fields": {
+      "name": "Uy uchun",
+      "slug": "uy-uchun",
+      "icon": "https://img.icons8.com/arcade/50/home.png"
+
+    }
+  },
+  {
+    "model": "apps.Category",
+    "pk": 2,
+    "fields": {
+      "name": "Bolalar uchun",
+      "slug": "bolalar-uchun",
+      "icon": "https://img.icons8.com/cute-clipart/50/baby.png"
+    }
+  },
+  {
+    "model": "apps.Category",
+    "pk": 3,
+    "fields": {
+      "name": "Sovg'a",
+      "slug": "sovga",
+      "icon": "https://img.icons8.com/external-justicon-flat-justicon/50/external-gift-ecommerce-justicon-flat-justicon.png"
+    }
+  },
+  {
+    "model": "apps.Category",
+    "pk": 4,
+    "fields": {
+      "name": "Ayollar",
+      "slug": "ayollar",
+      "icon": "https://img.icons8.com/external-justicon-lineal-color-justicon/50/external-woman-spring-justicon-lineal-color-justicon.png"
+    }
+  },
+  {
+    "model": "apps.Category",
+    "pk": 5,
+    "fields": {
+      "name": "Davolovchi mahsulotlar",
+      "slug": "davolovchi-mahsulotlar",
+      "icon": "https://img.icons8.com/external-vitaliy-gorbachev-blue-vitaly-gorbachev/50/external-pills-health-vitaliy-gorbachev-blue-vitaly-gorbachev.png"
+    }
+  },
+  {
+    "model": "apps.Category",
+    "pk": 6,
+    "fields": {
+      "name": "Erkaklar uchun",
+      "slug": "erkaklar-uchun",
+      "icon": "https://img.icons8.com/emoji/50/man-with-beard-light-skin-tone.png"
+    }
+  },
+  {
+    "model": "apps.Category",
+    "pk": 7,
+    "fields": {
+      "name": "Fitnes",
+      "slug": "fitnes",
+      "icon": "https://img.icons8.com/external-smashingstocks-outline-color-smashing-stocks/50/external-gym-games-smashingstocks-outline-color-smashing-stocks.png"
+    }
+  },
+  {
+    "model": "apps.Category",
+    "pk": 8,
+    "fields": {
+      "name": "Davolovchi mazlar",
+      "slug": "davolovchi-mazlar",
+      "icon": "https://img.icons8.com/external-wanicon-two-tone-wanicon/50/external-grinding-laboratory-wanicon-two-tone-wanicon.png"
+    }
+  },
+  {
+    "model": "apps.Category",
+    "pk": 9,
+    "fields": {
+      "name": "Mashina uchun",
+      "slug": "mashina-uchun",
+      "icon": "https://img.icons8.com/stickers/50/tesla-model-x.png"
+    }
+  },
+  {
+    "model": "apps.Category",
+    "pk": 10,
+    "fields": {
+      "name": "Kitoblar",
+      "slug": "kitoblar",
+      "icon": "https://img.icons8.com/dusk/50/book-shelf.png"
+    }
+  },
+  {
+    "model": "apps.Category",
+    "pk": 11,
+    "fields": {
+      "name": "Aqilli soatlar",
+      "slug": "aqilli-soatlar",
+      "icon": "https://img.icons8.com/officel/50/apple-watch-apps.png"
+    }
+  },
+  {
+    "model": "apps.Category",
+    "pk": 12,
+    "fields": {
+      "name": "Atir",
+      "slug": "atir",
+      "icon": "https://img.icons8.com/external-flaticons-lineal-color-flat-icons/50/external-perfume-skincare-flaticons-lineal-color-flat-icons.png"
+    }
+  },
+  {
+    "model": "apps.Category",
+    "pk": 13,
+    "fields": {
+      "name": "Yangi yil mahsulotlar",
+      "slug": "yangi-yil-mahsulotlar",
+      "icon": "https://img.icons8.com/3d-fluency/50/christmas-tree.png"
+    }
+  },
+  {
+    "model": "apps.Category",
+    "pk": 14,
+    "fields": {
+      "name": "Eliktronika",
+      "slug": "eliktronika",
+      "icon": "https://img.icons8.com/external-others-cattaleeya-thongsriphong/50/external-electronic-electronic-device-blue-others-cattaleeya-thongsriphong-3.png"
+    }
+  }
+]

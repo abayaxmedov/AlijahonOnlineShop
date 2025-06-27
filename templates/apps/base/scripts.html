@@ -1,0 +1,59 @@
+{#========== phone number ================#}
+<script>
+    $('#phone-mask').inputmask({
+        "mask": "+\\9\\98(99) 999-99-99"
+    });
+    $('#messages-modal').modal('show');
+</script>
+{#============== regions -districts ============#}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#id_region").change(function () {
+            let region_id = $(this).val();
+            if (region_id) {
+                $.ajax({
+                    url: "{% url 'get_districts' %}",
+                    data: {'region_id': region_id},
+                    dataType: 'json',
+                    success: function (data) {
+                        let citySelect = $("#id_district");
+                        citySelect.empty();
+                        $.each(data, function (index, district) {
+                            citySelect.append('<option value="' + district.id + '">' + district.name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $("#id_description").empty();
+                $("#id_district").empty().append('<option value="">Avval viloyatni tanlang</option>');
+            }
+        });
+    });
+</script>
+
+{#=========== wishlist =================#}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+   document.querySelectorAll(".like-button").forEach(button => {
+       button.addEventListener("click", function () {
+           let productId = this.dataset.productId;
+           let button = this;
+
+           fetch(`/wishlist/${productId}`, {
+               method: "GET"
+           })
+           .then(response => response.json())
+           .then(data => {
+               if (data.liked) {
+                   button.classList.add("bg-danger");  // Like bosilgan boladi
+               } else {
+                   button.classList.remove("bg-danger"); // Unlike bozgaradi
+               }
+           });
+       });
+   });
+});
+</script>
