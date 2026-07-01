@@ -17,7 +17,7 @@
     </div>
     <div class="card-body fs--1 p-0">
 
-        <a class="border-bottom-0 notification rounded-0 border-x-0 border border-300" href="/profile/liked-products">
+        <a class="border-bottom-0 notification rounded-0 border-x-0 border border-300" href="{% url 'wish-list' %}">
             <div class="notification-avatar">
                 <div class="avatar avatar-xl me-3">
                     <div class="avatar-emoji rounded-circle "><span role="img" aria-label="Emoji">📌</span></div>
@@ -28,7 +28,7 @@
             </div>
         </a>
 
-        <a class="border-bottom-0 notification rounded-0 border-x-0 border border-300" href="/profile/ordered-products">
+        <a class="border-bottom-0 notification rounded-0 border-x-0 border border-300" href="{% url 'order-list' %}">
             <div class="notification-avatar">
                 <div class="avatar avatar-xl me-3">
                     <div class="avatar-emoji rounded-circle "><span role="img" aria-label="Emoji">🏷️</span></div>

@@ -1,5 +1,4 @@
 {% extends 'apps/base/base.html' %}
-{% load humanize %}
 
 {% block body %}
     <div class="card mb-3">
@@ -40,7 +39,7 @@
                                             <p class="fs--1 mb-2"><a class="text-500"
                                                                      href="{% url 'product-list' product.category.slug %}">{{ product.category.name }}</a>
                                             </p>
-                                            <h5 class="fs-md-2 text-warning mb-0 d-flex align-items-center mb-2"> {{ product.price|floatformat:0|intcomma }}
+                                            <h5 class="fs-md-2 text-warning mb-0 d-flex align-items-center mb-2"> {{ product.price }}
                                                 <!-- <del class="ms-2 fs--1 text-500">180 000 so'm </del> -->
                                             </h5>
                                             <p></p>
@@ -62,10 +61,9 @@
                                                href="{% if not request.user.is_authenticated %}{% url 'login' %}{% else %}#!{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top"
                                                data-product-id="{{ product.pk }}" title="Add to Wish List"><span
                                                     class="far fa-heart "></span></a><a
-                                                class="btn btn-sm btn-falcon-default" href="{% if not request.user.is_authenticated %}{% url 'login' %}{% else %}{% url 'product-detail' product.slug %}{% endif %}"
+                                                class="btn btn-sm btn-falcon-default" href="{% if not request.user.is_authenticated %}{% url 'login' %}{% else %}#!{% endif %}"
                                                 data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="Add to Cart"><span class="fas fa-cart-plus">
-
                                             </span>
                                         </a>
                                         </div>

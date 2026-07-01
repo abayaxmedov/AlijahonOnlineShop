@@ -4,7 +4,7 @@ from django.db.models import Model, CharField, ImageField, TextField, DecimalFie
     TextChoices, IntegerField, SET_NULL, DateTimeField, SmallIntegerField
 from django.db.models.fields import BigIntegerField, SlugField
 from django.utils.text import slugify
-from ckeditor_uploader.fields import RichTextUploadingField
+# from ckeditor_uploader.fields import RichTextUploadingField
 
 
 # Create your models here.
@@ -120,7 +120,8 @@ class Thread(Model):
 
 
 class Product(BaseSlugModel):
-    description = RichTextUploadingField()
+    description = TextField()
+    # RichTextUploadingField()
     image = ImageField(upload_to='products/')
     quantity = IntegerField()
     telegram_url = CharField(max_length=255, null=True, blank=True)
@@ -129,7 +130,6 @@ class Product(BaseSlugModel):
     benefit = DecimalField(max_digits=12, decimal_places=2, default=0, null=True, blank=True)
     site_sell = SmallIntegerField(default=0, null=True, blank=True)
     discount = CharField(max_length=255, null=True, blank=True)
-    quantity = IntegerField(default=1)
 
     category = ForeignKey('apps.Category', CASCADE, related_name='products')
 
@@ -151,7 +151,7 @@ class Order(Model):
         # operatorga new, pending, ready to order, archived, cancel
         # diliver delivering, delivered, not pick up, completed
 
-    last_name = CharField(max_length=255, null=True, blank=True)
+    first_name = CharField(max_length=255, null=True, blank=True)
     phone_number = CharField(max_length=20)
     quantity = IntegerField(default=1)
     status = CharField(max_length=255, choices=OrderType.choices, default=OrderType.NEW)  # noqa
@@ -169,13 +169,14 @@ class Order(Model):
 
     @property
     def amount_sum(self):
-        return (self.quantity * self.product.
-                price)
+        return self.quantity * self.product.price
 
 
 class AdminSetting(Model):
-    # deliver_price = IntegerField()
+    deliver_price = IntegerField()
     competition_photo = ImageField(upload_to='admin/')
     start = DateField()
     finish = DateField()
-    description = RichTextUploadingField()
+    description = TextField()
+    # RichTextUploadingField()
+

@@ -3,10 +3,10 @@ import re
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
-from django.forms import CharField, IntegerField
+from django.forms import CharField, IntegerField, DecimalField, ModelForm
 from django.forms.forms import Form
 
-from apps.models import User, Order
+from .models import User, Order, Thread, Product
 
 
 class LoginForm(Form):
@@ -17,7 +17,7 @@ class LoginForm(Form):
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data.get("phone_number")
-        return "+" + re.sub('\D', "", phone_number)
+        return "+" + re.sub(r'\D', "", phone_number)
 
     def clean_password(self):
         return make_password(self.cleaned_data.get('password'))
@@ -45,6 +45,8 @@ class PasswordUpdateForm(Form):
     def clean_new(self):
         return make_password(self.cleaned_data.get('new'))
 
+
+
     def clean_confirm(self):
         new = self.data.get('new')
         confirm = self.cleaned_data.get('confirm')
@@ -55,17 +57,50 @@ class PasswordUpdateForm(Form):
         password = self.cleaned_data.get('new')
         User.objects.filter(pk=user.id).update(password=password)
 
-
 class OrderForm(Form):
-    last_name = CharField(max_length=255)
+    first_name = CharField(max_length=255)
     phone_number = CharField(max_length=20)
     product_id = IntegerField()
+    thread_id = IntegerField(required=False)
+    owner_id = IntegerField(required=False)
+    order_sum = DecimalField(max_digits=12, decimal_places=2, required=False)
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data.get("phone_number")
-        return "+" + re.sub('\D', "", phone_number)
+        return "+" + re.sub(r'\D', "", phone_number)
+
+    def save(self):
+        return Order.objects.create(**self.cleaned_data)
+
+
+class ThreadFrom(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['user'].required = False
+
+
+    class Meta:
+        model = Thread
+        fields = 'name', 'discount_sum', 'product', 'user'
+
+    def clean_discount_sum(self):
+        pass
+        product_id = self.data.get('product')
+        product = Product.objects.filter(pk=product_id).first()
+        discount_sum = self.cleaned_data.get('discount_sum')
+        if discount_sum == "Yo'q":
+            discount_sum = 0
+        if product.benefit < discount_sum:
+            raise ValidationError("Chegirma miqdoridan ko'p")
+        return discount_sum
 
 
 
-    def save(self, user):
-        return Order.objects.create(**self.cleaned_data, owner=user)
+class OrderModelForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['comment_operator'].required = False
+
+    class Meta:
+        model = Order
+        fields = 'quantity', 'send_date', 'district' ,'status', 'comment_operator'

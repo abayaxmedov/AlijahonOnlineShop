@@ -1,5 +1,4 @@
 {% extends 'apps/base/base.html' %}
-{% load humanize %}
 
 {% block body %}
     <div class="card mt-2 mb-2">
@@ -8,7 +7,7 @@
                 <div class="col">
                     <h5 class="mb-0" id="followers"></h5>
                 </div>
-                <div class="col text-end"><a class="font-sans-serif" href="/category">Kategoriyalar</a>
+                <div class="col text-end"><a class="font-sans-serif" href="#">Kategoriyalar</a>
                 </div>
             </div>
         </div>
@@ -75,7 +74,7 @@
                                 <p class="fs--1 mb-2">
                                     <a class="text-500" href="{% url 'product-list' product.category.slug %}">{{ product.category.name.title}}</a>
                                 </p>
-                                <h5 class="fs-md-2 text-warning mb-0 d-flex align-items-center mb-2"> {{ product.price|floatformat:0|intcomma }}
+                                <h5 class="fs-md-2 text-warning mb-0 d-flex align-items-center mb-2"> {{ product.price }}
                                     <!-- <del class="ms-2 fs--1 text-500">180 000 so'm </del> -->
                                 </h5>
                             </div>
@@ -92,11 +91,10 @@
                                         </div>
                                         <div>
                                             <a class="btn btn-sm btn-falcon-default like-button{% if product.pk in liked_products_id %} bg-danger {% endif %}"
-                                               href="{% if not request.user.is_authenticated %}{% url 'login' %}{% else %}#!{% endif %} "
-                                               data-bs-toggle="tooltip" data-bs-placement="top"
+                                               href="{% if not request.user.is_authenticated %}{% url 'login' %}{% else %}#!{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top"
                                                data-product-id="{{ product.pk }}" title="Add to Wish List"><span
                                                     class="far fa-heart "></span></a><a
-                                                class="btn btn-sm btn-falcon-default" href="{% if not request.user.is_authenticated %}{% url 'login' %}{% else %}{% url 'product-detail' product.slug %}{% endif %}"
+                                                class="btn btn-sm btn-falcon-default" href="{% if not request.user.is_authenticated %}{% url 'login' %}{% else %}#!{% endif %}"
                                                 data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="Add to Cart"><span class="fas fa-cart-plus">
 

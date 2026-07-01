@@ -1,5 +1,4 @@
 {% load static %}
-{% load humanize %}
 
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
@@ -82,17 +81,19 @@
     <noscript><img height="1" width="1" style="display:none"
                    src="https://www.facebook.com/tr?id=952624653318258&ev=PageView&noscript=1"
     /></noscript>
-    <style>
-        .content_auth_form {
-            position: absolute;
-            top: 22%;
-            left: 50%;
-            transform: translateX(-50%);
-            max-width: 21.875rem;
-            width: 100%;
-            text-align: center;
-        }
-    </style>
+{#    <style>#}
+{#        .content_auth_form {#}
+{#            position: absolute;#}
+{#            top: 22%;#}
+{#            left: 50%;#}
+{#            transform: translateX(-50%);#}
+{#            max-width: 21.875rem;#}
+{#            width: 100%;#}
+{#            text-align: center;#}
+{#        }#}
+{#    </style>#}
+
+
 </head>
 <body>
 <main class="main" id="top">
@@ -140,57 +141,57 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="{% url 'product-list' 'all' %}"
-                                       aria-expanded="false">
+                                    <a class="nav-link active" href="{% url 'product-list' 'all' %}" aria-expanded="false">
                                         <div class="d-flex align-items-center"><span
                                                 class="nav-link-text ps-1">Mahsulotlar</span>
                                         </div>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="/profile/ordered-products" aria-expanded="false">
+                                    <a class="nav-link active" href="{% url 'order-list' %}" aria-expanded="false">
                                         <div class="d-flex align-items-center"><span
                                                 class="nav-link-text ps-1">Buyurtmalar</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="{% url 'wish-list' %}" aria-expanded="false">
+                                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Yoqtirgan mahsulotlarim</span>
                                         </div>
                                     </a>
                                 </li>
 
                                 {% if request.user.is_authenticated %}
                                     <hr class="mb-0 navbar-vertical-divider">
+
                                     <li class="nav-item">
-                                        <a class="nav-link active" href="{% url 'wish-list' %}" aria-expanded="false">
-                                            <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Yoqtirgan mahsulotlarim</span>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link active" href="/admin_page/market/" aria-expanded="false">
+                                        <a class="nav-link active" href="{% url 'market-list' 'all' %}" aria-expanded="false">
                                             <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Market</span>
                                             </div>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link active" href="/admin_page/urls" aria-expanded="false">
+                                        <a class="nav-link active" href="{% url 'thread-list' %}" aria-expanded="false">
                                             <div class="d-flex align-items-center"><span
                                                     class="nav-link-text ps-1">Oqim</span>
                                             </div>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link active" href="/admin_page/stats" aria-expanded="false">
+                                        <a class="nav-link active" href="{% url 'statistic-list' %}" aria-expanded="false">
                                             <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Statistika</span>
                                             </div>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link active" href="/admin_page/requests"
+                                        <a class="nav-link active" href="{% url 'thread-request' %}"
                                            aria-expanded="false">
                                             <div class="d-flex align-items-center"><span class="nav-link-text ps-1">So'rovlar</span>
                                             </div>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link active" href="/admin_page/competition"
+                                        <a class="nav-link active" href="{% url 'competition' %}"
                                            aria-expanded="false">
                                             <div class="d-flex align-items-center"><span
                                                     class="nav-link-text ps-1">Konkurs</span>
@@ -198,7 +199,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link active" href="/admin_page/withdraw"
+                                        <a class="nav-link active" href="#"
                                            aria-expanded="false">
                                             <div class="d-flex align-items-center"><span
                                                     class="nav-link-text ps-1">To'lov</span>
@@ -206,7 +207,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link active" href="/admin_page/diagrams"
+                                        <a class="nav-link active" href="{% url 'diogram' %}"
                                            aria-expanded="false">
                                             <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Diagrammalar</span>
                                             </div>
@@ -227,7 +228,7 @@
                         aria-expanded="false" aria-label="Toggle Navigation">
                     <span class="navbar-toggle-icon"><span class="toggle-line"></span></span>
                 </button>
-                <a class="navbar-brand me-1 me-sm-3" href="/templates/public">
+                <a class="navbar-brand me-1 me-sm-3" href="#">
                     <div class="d-flex align-items-center">
                         <img class="me-2"
                              src="{% static '/static/apps/assets/img/icons/spot-illustrations/falcon.png' %}" alt=""
@@ -238,9 +239,10 @@
                 <ul class="navbar-nav align-items-center d-none d-lg-block">
                     <li class="nav-item">
                         <div class="search-box" data-list='{"valueNames":["title"]}'>
-                            <form action="/search/" method="POST" class="position-relative" data-bs-toggle="search"
+                            <form action="{% url 'product-list' 'all' %}" method="GET" class="position-relative" data-bs-toggle="search"
                                   data-bs-display="static" autocomplete="off">
-                                <input id="search-input" name="product" class="form-control search-input fuzzy-search"
+                                {% csrf_token %}
+                                <input id="search-input" name="query" class="form-control search-input fuzzy-search"
                                        type="search" placeholder="Search..."
                                        aria-label="Search"/>
                                 <span class="fas fa-search search-box-icon"></span>
@@ -293,10 +295,11 @@
                                         Sevimlilar
                                     </a>
                                     <a class="dropdown-item header_navbar_lang_menu_dropdown_item"
-                                       href="/profile/settings">
+                                       href="{% url 'profile' %}">
                                         Sozlamalar
                                     </a>
-                                    <a class="dropdown-item fw-bold text-warning" href="/admin_page">
+                                    {% if request.user.role == 'operator' %}
+                                        <a class="dropdown-item fw-bold text-warning" href="{% url 'operator' %}">
                                         <svg class="svg-inline--fa fa-crown fa-w-20 me-1" aria-hidden="true"
                                              focusable="false" data-prefix="fas" data-icon="crown" role="img"
                                              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"
@@ -307,13 +310,14 @@
                                         <!-- <span class="fas fa-crown me-1"></span> Font Awesome fontawesome.com -->
                                         <span>Adminlar uchun</span>
                                     </a>
+                                    {% endif %}
 
                                     <a class="dropdown-item header_navbar_lang_menu_dropdown_item"
                                        href="{% url 'logout' %}">
                                         Chiqish
                                     </a>
                                     <a class="dropdown-item header_navbar_lang_menu_dropdown_item" target="_blank"
-                                       href="https://t.me/abay_axmedov">
+                                       href="#">
                                         Savollar bo'yicha
                                     </a>
 
@@ -347,7 +351,6 @@
                     </div>
 
                 </div>
-                <a href="{% url 'logout' %}">Login</a>
             </footer>
 
 

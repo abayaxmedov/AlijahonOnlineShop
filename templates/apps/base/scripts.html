@@ -7,27 +7,53 @@
 </script>
 {#============== regions -districts ============#}
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
+{#<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>#}
+{#<script>#}
+{#    $(document).ready(function () {#}
+{#        $("#id_region").change(function () {#}
+{#            let region_id = $(this).val();#}
+{#            if (region_id) {#}
+{#                $.ajax({#}
+{#                    url: "{% url 'get_districts' %}",#}
+{#                    data: {'region_id': region_id},#}
+{#                    dataType: 'json',#}
+{#                    success: function (data) {#}
+{#                        let citySelect = $("#id_district");#}
+{#                        citySelect.empty();#}
+{#                        $.each(data, function (index, district) {#}
+{#                            citySelect.append('<option value="' + district.id + '">' + district.name + '</option>');#}
+{#                        });#}
+{#                    }#}
+{#                });#}
+{#            } else {#}
+{#                $("#id_description").empty();#}
+{#                $("#id_district").empty().append('<option value="">Avval viloyatni tanlang</option>');#}
+{#            }#}
+{#        });#}
+{#    });#}
+{#</script>#}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
     $(document).ready(function () {
-        $("#id_region").change(function () {
-            let region_id = $(this).val();
+        $('#id_region').change(function () {
+            var region_id = $(this).val();
             if (region_id) {
                 $.ajax({
-                    url: "{% url 'get_districts' %}",
-                    data: {'region_id': region_id},
-                    dataType: 'json',
+                    url: '{% url "get_districts" %}',
+                    data: {
+                        'region_id': region_id
+                    },
                     success: function (data) {
-                        let citySelect = $("#id_district");
-                        citySelect.empty();
-                        $.each(data, function (index, district) {
-                            citySelect.append('<option value="' + district.id + '">' + district.name + '</option>');
+                        $('#id_district').empty();
+                        $('#id_district').append('<option value="">Tumanni tanlang</option>');
+                        $.each(data, function (key, value) {
+                            $('#id_district').append('<option value="' + value.id + '">' + value.name + '</option>');
                         });
                     }
                 });
             } else {
-                $("#id_description").empty();
-                $("#id_district").empty().append('<option value="">Avval viloyatni tanlang</option>');
+                $('#id_district').empty();
+                $('#id_district').append('<option value="">Tumanni tanlang</option>');
             }
         });
     });
@@ -57,3 +83,92 @@ document.addEventListener("DOMContentLoaded", function () {
    });
 });
 </script>
+
+
+{#=========== oqim =============#}
+
+<script>
+    $('.btn_open_modal').on('click', function () {
+        let product_id = $(this).attr('name'); // product.id ni olish
+        let benefit = $(this).attr('data-bs-benefit'); // data-bs-benefit ni olish
+
+        // Hidden inputga product_id ni qo'yish
+        $('#hidden_product').val(product_id);
+
+        // Placeholder ni dinamik o'zgartirish
+        $('#id_discount').attr('placeholder', 'Chegirma miqdori: ' + benefit + " so'mgacha");
+    });
+</script>
+{#=============== nusxa ==============#}
+
+<script>
+    document.querySelector('.copy_ref_bn').addEventListener('click', function () {
+        // Inputdagi qiymatni olish
+        let textToCopy = document.querySelector('.ref_link').value;
+
+        // Clipboard’ga nusxalash
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                alert('Havola nusxa qilindi: ' + textToCopy);
+            })
+            .catch(err => {
+                console.error('Nusxa qilishda xato: ', err);
+                alert('Nusxa qilishda xato yuz berdi!');
+            });
+    });
+</script>
+
+{#======= errors messages ========#}
+<script>
+    setTimeout(function() {
+        let alerts = document.querySelectorAll(".alert");
+        alerts.forEach(alert => {
+            let bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 5000); // 5 soniyadan keyin o‘chadi
+</script>
+
+
+{#======= operator =========#}
+
+<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script>
+<script>
+    $(function () {
+        $('select').multipleSelect({
+            multiple: true,
+            multipleWidth: 500,
+            maxHeight: 200,
+            maxHeightUnit: 50,
+            filter: true
+        })
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        $('#region-select').change(function () {
+            var regionId = $(this).val();
+            var $districtSelect = $('#district-select');
+            $districtSelect.empty();
+            $districtSelect.append('<option value="">All District</option>');
+
+            if (regionId) {
+                $.ajax({
+                    url: 'operator/ajax/get-districts/' + regionId + '/',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $.each(data, function (index, district) {
+                            $districtSelect.append('<option value="' + district.id + '">' + district.name + '</option>');
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('An error occurred:', error);
+                    }
+                });
+            }
+        });
+    });
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
